@@ -1,0 +1,30 @@
+﻿<div class="row">
+    <h1>Oczekiwana długość życia</h1>
+    <div class="col-lg-6 col-md-12">
+        @Html.Partial("Widgets/ChartWidget", new ChartWidgetModel() { Height = 350, Width = 500 })
+    </div>
+    <div class="col-lg-6 col-md-12">
+        @Html.Partial("Widgets/JsonPreviewWidget", new JsonPreviewWidgetModel() { Json = null })
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx,
+            {
+                type: 'line',
+                data: @Html.Raw("{}"),
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                    }
+                }
+            });
+    </script>
+}
+
