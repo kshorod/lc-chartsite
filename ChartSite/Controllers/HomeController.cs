@@ -18,7 +18,7 @@ namespace ChartSite.Controllers
 
         public HomeController()
         {
-            //_fileRepository = new FileRepository(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Input"));
+            _fileRepository = new FileRepository(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Input"));
         }
 
         public ActionResult Index()
@@ -56,7 +56,36 @@ namespace ChartSite.Controllers
 
         public ActionResult Lifespan()
         {
-            return View();
+            var data = _fileRepository.LoadFile<LifeExpectancyModel>("LifeExpectancy.csv");
+
+            var filteredData = data.OrderByDescending(x => x.GetYearsArray().Average())
+                .Take(5).ToList();
+
+            var chart = new ChartData<LineChartDataset>();
+
+            chart.Labels.Add("2010");
+            chart.Labels.Add("2011");
+            chart.Labels.Add("2012");
+            chart.Labels.Add("2013");
+
+            foreach (LifeExpectancyModel element in filteredData)
+            {
+                var dataset = new LineChartDataset();
+                dataset.Label = element.Country;
+                dataset.Data.Add(element.Year2010);
+                dataset.Data.Add(element.Year2011);
+                dataset.Data.Add(element.Year2012);
+                dataset.Data.Add(element.Year2013);
+                chart.Datasets.Add(dataset);
+            }
+
+            var model = new LifespanViewModel();
+
+            ChartHelpers.BreatheColors(chart);
+
+            model.ChartData = SerializationHelpers.ToJson(chart);
+
+            return View(model);
         }
 
         public ActionResult Weather()
