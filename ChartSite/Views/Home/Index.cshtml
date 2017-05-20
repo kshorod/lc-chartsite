@@ -5,7 +5,7 @@
         @Html.Partial("Widgets/ChartWidget", new ChartWidgetModel(){Height = 350, Width = 500})
     </div>
     <div class="col-lg-6 col-md-12">
-        @Html.Partial("Widgets/JsonPreviewWidget", new JsonPreviewWidgetModel(){ Json = null})
+        @Html.Partial("Widgets/JsonPreviewWidget", new JsonPreviewWidgetModel(){ Json = Model.ChartData})
     </div>
 </div>
 
@@ -14,7 +14,7 @@
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {
             type: 'bar',
-            data: @Html.Raw("{}"),
+            data: @Html.Raw(Model.ChartData),
             options: {}
         });
     </script>
